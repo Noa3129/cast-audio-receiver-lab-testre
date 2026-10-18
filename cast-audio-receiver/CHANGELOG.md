@@ -1,5 +1,18 @@
 # App changelog
 
+## 0.6.0-dev30 — Cast and AirPlay connection diagnostics
+
+- Add a quiet, opt-in AirPlay test tone to each configured AirPlay output. The
+  test uses the existing sender backend, sets output volume to 15%, and reports
+  a structured error code if playback does not start. Disable the Cast route
+  first to avoid two sender processes controlling the same speaker.
+- Add live Cast receiver indicators for bridge reachability, adapter heartbeat
+  and Cast commands delivered to the output adapter.
+- Add Japanese interface language and a Japanese diagnostic guide with error
+  code explanations and a playback troubleshooting sequence.
+- Automated and physical HomePod acceptance remain required before describing
+  the AirPlay test as confirmed audible playback.
+
 ## 0.6.0-dev29 — suspected Yamaha feedback fix
 
 - Suspected fix, not yet confirmed on Yamaha RX-V673: receiver-to-YTM volume
