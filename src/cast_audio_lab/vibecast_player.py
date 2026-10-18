@@ -191,6 +191,10 @@ class VibecastAudioPlayer:
         session_id = message.get("sessionId")
         if not isinstance(session_id, str):
             return
+        if command in {"load", "play", "pause", "stop", "seek", "volume"}:
+            # This marker is consumed in-memory by RouteManager and never
+            # includes session ids, media URLs, or user-controlled metadata.
+            HEALTH_LOGGER.info("cast_received %s", command)
         media_id = (message.get("media") or {}).get("mediaSessionId") if (
             command == "load" and isinstance(message.get("media"), dict)
         ) else self._media_session_id if session_id == self._media_session_owner else None

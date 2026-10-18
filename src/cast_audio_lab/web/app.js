@@ -38,10 +38,52 @@ const translations = {
     added: "Output added; still disabled.", network_added: "Experimental output added; still disabled.", searching: "Searching for {protocol} targets …", import_name: "Name for imported speaker", imported: "Already imported", import_disabled: "Import disabled", import_done: "Imported. Enable it in the configured outputs.", found: "{count} endpoints found. Selection is valid for 3 minutes."
   }
 };
+const diagnosticText = {
+  en: {
+    diagnostics_title: "Connection diagnostics", diagnostics_hint: "Cast status confirms the receiver bridge and commands delivered to the app. AirPlay test plays a quiet 660 Hz tone at 15% volume. Listen to confirm sound.",
+    cast_bridge: "Cast receiver bridge", cast_route: "Cast receiver", last_command: "Last received command", command_count: "Commands received", heartbeat: "Receiver heartbeat", airplay_test: "Play AirPlay test tone", airplay_test_busy: "An AirPlay test is already running.", airplay_test_active: "Disable this Cast output before testing AirPlay to avoid two senders controlling the same speaker.", airplay_test_ok: "Sender reports playback started at 15% volume. Confirm that you can hear the tone.", airplay_test_missing: "Select an AirPlay output first.", airplay_test_failed: "AirPlay test failed before playback started.", test_cast_connect: "Cast commands are being received.", test_cast_wait: "Receiver is connected and waiting for a Cast command.", test_cast_disabled: "Cast output is disabled.", test_cast_unreachable: "Cast receiver process is not running.", test_cast_disconnected: "Receiver bridge heartbeat is missing.", bridge_ready: "Bridge reachable", bridge_unreachable: "Bridge unreachable", error_code: "Error code: {code}", unknown_error_code: "See error code", last_command_none: "None yet", probe_volume_note: "Test tone volume: 15%"
+  },
+  de: {
+    diagnostics_title: "Verbindungsdiagnose", diagnostics_hint: "Der Cast-Status prüft die Receiver-Bridge und empfangene Befehle. Der AirPlay-Test spielt einen leisen 660-Hz-Ton mit 15 % Lautstärke. Bitte auf den Ton achten.",
+    cast_bridge: "Cast-Receiver-Bridge", cast_route: "Cast-Receiver", last_command: "Letzter empfangener Befehl", command_count: "Empfangene Befehle", heartbeat: "Receiver-Heartbeat", airplay_test: "AirPlay-Testton abspielen", airplay_test_busy: "Ein AirPlay-Test läuft bereits.", airplay_test_active: "Deaktiviere diese Cast-Ausgabe vor dem AirPlay-Test, damit nicht zwei Sender denselben Lautsprecher steuern.", airplay_test_ok: "Der Sender meldet den Wiedergabestart bei 15 % Lautstärke. Bitte prüfen, ob der Ton hörbar ist.", airplay_test_missing: "Bitte zuerst ein AirPlay-Ziel auswählen.", airplay_test_failed: "Der AirPlay-Test ist vor dem Wiedergabestart fehlgeschlagen.", test_cast_connect: "Cast-Befehle werden empfangen.", test_cast_wait: "Receiver verbunden; wartet auf einen Cast-Befehl.", test_cast_disabled: "Cast-Ausgabe ist deaktiviert.", test_cast_unreachable: "Cast-Receiver-Prozess läuft nicht.", test_cast_disconnected: "Heartbeat zur Receiver-Bridge fehlt.", bridge_ready: "Bridge erreichbar", bridge_unreachable: "Bridge nicht erreichbar", error_code: "Fehlercode: {code}", unknown_error_code: "Fehlercode ansehen", last_command_none: "Noch keiner", probe_volume_note: "Testton-Lautstärke: 15 %"
+  }
+};
+Object.assign(translations.en, diagnosticText.en);
+Object.assign(translations.de, diagnosticText.de);
+translations.ja = {
+  ...translations.en,
+  page_title: "Audio Lab · スピーカー", language: "言語", title: "スピーカーを管理", subtitle: "出力先の設定と状態を確認できます。",
+  outputs: "設定済みの出力先", refresh: "更新", outputs_hint: "名前の変更や無効化を行うと、対象の出力だけが再起動または停止し、再生中の音声は中断されます。",
+  local: "ローカル出力", local_loading: "ローカル出力を読み込み中…", cast_name: "Cast名", add: "追加",
+  airplay: "AirPlayの出力先", scan: "ネットワークを検索", airplay_hint: "追加する出力先を選択してください。プロトコルの異なる同一機器が見つかった場合は、目的の接続先を選びます。",
+  network: "実験的なネットワーク出力", network_hint: "DLNAとSonosは実験的な対応です。機器により互換性が異なります。追加した出力は最初は無効です。",
+  dlna_devices: "DLNA機器を検索", scan_dlna: "DLNAネットワークを検索", dlna_manual: "DLNAを手動で設定", dlna_name: "DLNA名", description_url: "機器説明URL（IPアドレスだけではなく完全なURL）", add_dlna: "DLNAを追加",
+  sonos_name: "Sonos名", sonos_host: "SonosのIPアドレスまたはホスト名", add_sonos: "Sonosを追加",
+  footer: "実験的なソフトウェアです。プロセス稼働中の表示だけではCast接続や音声出力を確認できません。ペアリング情報やログはこの画面に表示されません。",
+  access_error: "アクセスできません。Home Assistantでアプリ画面を開き直してください。", request_error: "リクエストに失敗しました。", network_error: "接続に失敗しました。ネットワークを確認して再試行してください。",
+  invalid_request: "設定またはリクエストが正しくありません。", operation_failed: "処理に失敗しました。詳細な診断情報はローカルでのみ確認できます。", not_found: "出力先が見つかりません。画面を更新してください。",
+  discovery_expired: "検索結果の有効期限が切れました。もう一度検索してください。", scan_running: "検索中です。", scan_timeout: "ネットワーク検索がタイムアウトしました。もう一度お試しください。", dlna_unavailable: "DLNA機能を利用できません。", local_exists_error: "ローカル出力はすでに設定されています。既存の出力を使用してください。",
+  state_running: "プロセス稼働中", state_disabled: "無効", state_starting: "起動中", state_backoff: "再起動を試行中", state_unknown: "状態不明", process_status: "{state} · 再起動回数: {count}",
+  local_exists: "ローカル出力は設定済みです。上の一覧から管理できます。", local_available: "このLinux機器で再生します。追加した出力は最初は無効です。", version: "バージョン {version}", no_routes: "出力先はまだ設定されていません。",
+  save_name: "名前を保存", restart_confirm: "この出力を再起動します。再生中の音声は中断されます。続行しますか？", disable: "無効化", enable: "有効化", disable_confirm: "この出力の再生を停止しますか？", enable_confirm: "この出力をCastスピーカーとして起動しますか？", delete: "削除", delete_confirm: "スピーカー「{name}」を削除しますか？再生中の音声は停止します。",
+  dlna_url_label: "DLNA機器説明URL", save_dlna: "DLNAアドレスを保存", dlna_url_hint: "IPアドレスだけではなく、ポートとパスを含むUPnP機器説明URLを入力してください。",
+  added: "出力先を追加しました。まだ無効です。", network_added: "実験用出力先を追加しました。まだ無効です。", searching: "{protocol}の出力先を検索中…", import_name: "追加するスピーカー名", imported: "追加済み", import_disabled: "無効のまま追加", import_done: "追加しました。一覧から有効にしてください。", found: "{count}件見つかりました。検索結果は3分間有効です。",
+  diagnostics_title: "接続診断", diagnostics_hint: "Cast状態は受信ブリッジとアプリに届いたコマンドを確認します。AirPlayテストでは音量15%で小さな660Hzの音を再生します。実際に聞こえるか確認してください。",
+  cast_bridge: "Cast受信ブリッジ", cast_route: "Cast受信機", last_command: "最後に受信したコマンド", command_count: "受信コマンド数", heartbeat: "受信機ハートビート", airplay_test: "AirPlayテスト音を再生", airplay_test_busy: "AirPlayテストを実行中です。", airplay_test_active: "同じスピーカーを二重に制御しないよう、AirPlayテスト前にCast出力を無効にしてください。", airplay_test_ok: "送信側は音声開始を報告しました（音量15%）。実際に音が聞こえるか確認してください。", airplay_test_missing: "先にAirPlay出力先を追加してください。", airplay_test_failed: "再生開始前にAirPlayテストが失敗しました。", test_cast_connect: "Castコマンドを受信しています。", test_cast_wait: "受信機は接続済みです。Castコマンドを待っています。", test_cast_disabled: "Cast出力は無効です。", test_cast_unreachable: "Cast受信プロセスが稼働していません。", test_cast_disconnected: "受信ブリッジのハートビートを確認できません。", bridge_ready: "ブリッジ接続済み", bridge_unreachable: "ブリッジに接続できません", error_code: "エラーコード: {code}", unknown_error_code: "コードの詳細はログで確認してください", last_command_none: "まだありません", probe_volume_note: "テスト音量: 15%"
+};
+const codeLabels = {
+  en: {CAST_BRIDGE_READY:"Cast bridge is reachable.",CAST_BRIDGE_UNREACHABLE:"Cast bridge cannot be reached.",CAST_ROUTE_DISABLED:"Cast output is disabled.",CAST_ADAPTER_NOT_RUNNING:"Cast receiver process is not running.",CAST_RECEIVER_DISCONNECTED:"Cast receiver heartbeat is missing.",CAST_READY_WAITING:"Receiver is ready; waiting for a Cast command.",CAST_MESSAGE_RECEIVED:"Cast command received.",AIRPLAY_TEST_BUSY:"An AirPlay test is already running.",AIRPLAY_ROUTE_NOT_FOUND:"AirPlay output was not found.",AIRPLAY_ROUTE_REQUIRED:"Select an AirPlay output.",AIRPLAY_ROUTE_ACTIVE:"Disable the Cast output before testing AirPlay.",AIRPLAY_FFMPEG_NOT_FOUND:"FFmpeg is unavailable.",AIRPLAY_TEST_TONE_FAILED:"Could not generate the test tone.",AIRPLAY_SENDER_NOT_FOUND:"AirPlay sender is unavailable.",AIRPLAY_START_TIMEOUT:"Timed out waiting for AirPlay playback to start.",AIRPLAY_TEST_FAILED:"AirPlay test failed.",AIRPLAY_TEST_STARTED:"AirPlay sender reported playback started."},
+  de: {CAST_BRIDGE_READY:"Cast-Bridge ist erreichbar.",CAST_BRIDGE_UNREACHABLE:"Cast-Bridge ist nicht erreichbar.",CAST_ROUTE_DISABLED:"Cast-Ausgabe ist deaktiviert.",CAST_ADAPTER_NOT_RUNNING:"Cast-Receiver-Prozess läuft nicht.",CAST_RECEIVER_DISCONNECTED:"Cast-Receiver-Heartbeat fehlt.",CAST_READY_WAITING:"Receiver bereit; wartet auf Cast-Befehl.",CAST_MESSAGE_RECEIVED:"Cast-Befehl empfangen.",AIRPLAY_TEST_BUSY:"Ein AirPlay-Test läuft bereits.",AIRPLAY_ROUTE_NOT_FOUND:"AirPlay-Ausgabe wurde nicht gefunden.",AIRPLAY_ROUTE_REQUIRED:"Bitte eine AirPlay-Ausgabe auswählen.",AIRPLAY_ROUTE_ACTIVE:"Cast-Ausgabe vor dem AirPlay-Test deaktivieren.",AIRPLAY_FFMPEG_NOT_FOUND:"FFmpeg ist nicht verfügbar.",AIRPLAY_TEST_TONE_FAILED:"Testton konnte nicht erzeugt werden.",AIRPLAY_SENDER_NOT_FOUND:"AirPlay-Sender ist nicht verfügbar.",AIRPLAY_START_TIMEOUT:"Zeitüberschreitung beim AirPlay-Wiedergabestart.",AIRPLAY_TEST_FAILED:"AirPlay-Test fehlgeschlagen.",AIRPLAY_TEST_STARTED:"AirPlay-Sender meldet den Wiedergabestart."},
+  ja: {CAST_BRIDGE_READY:"Castブリッジに接続できます。",CAST_BRIDGE_UNREACHABLE:"Castブリッジに接続できません。",CAST_ROUTE_DISABLED:"Cast出力は無効です。",CAST_ADAPTER_NOT_RUNNING:"Cast受信プロセスが稼働していません。",CAST_RECEIVER_DISCONNECTED:"Cast受信機のハートビートがありません。",CAST_READY_WAITING:"受信機は準備完了です。Castコマンドを待っています。",CAST_MESSAGE_RECEIVED:"Castコマンドを受信しました。",AIRPLAY_TEST_BUSY:"AirPlayテストを実行中です。",AIRPLAY_ROUTE_NOT_FOUND:"AirPlay出力が見つかりません。",AIRPLAY_ROUTE_REQUIRED:"AirPlay出力を選択してください。",AIRPLAY_ROUTE_ACTIVE:"AirPlayテスト前にCast出力を無効にしてください。",AIRPLAY_FFMPEG_NOT_FOUND:"FFmpegを利用できません。",AIRPLAY_TEST_TONE_FAILED:"テスト音を生成できませんでした。",AIRPLAY_SENDER_NOT_FOUND:"AirPlay送信プログラムを利用できません。",AIRPLAY_START_TIMEOUT:"AirPlay再生開始の待機がタイムアウトしました。",AIRPLAY_TEST_FAILED:"AirPlayテストに失敗しました。",AIRPLAY_TEST_STARTED:"AirPlay送信側が再生開始を報告しました。"}
+};
+Object.assign(translations.en, diagnosticText.en, codeLabels.en);
+Object.assign(translations.de, diagnosticText.de, codeLabels.de);
+Object.assign(translations.ja, codeLabels.ja);
 const languageKey = "cast-audio-language";
 function initialLanguage() {
-  try { const saved = localStorage.getItem(languageKey); if (saved === "de" || saved === "en") return saved; } catch (_) { /* Storage may be blocked in an iframe. */ }
-  return (navigator.language || "en").toLowerCase().startsWith("de") ? "de" : "en";
+  try { const saved = localStorage.getItem(languageKey); if (saved === "ja" || saved === "de" || saved === "en") return saved; } catch (_) { /* Storage may be blocked in an iframe. */ }
+  const locale = (navigator.language || "en").toLowerCase();
+  return locale.startsWith("ja") ? "ja" : locale.startsWith("de") ? "de" : "en";
 }
 let language = initialLanguage();
 const t = (key, params = {}) => (translations[language][key] || translations.en[key] || translations[language].request_error).replace(/\{(\w+)\}/g, (_, name) => String(params[name] ?? ""));
@@ -64,7 +106,7 @@ function applyLanguage() {
   if (notice) message(notice.key, notice.params);
 }
 function setLanguage(value) {
-  if (value !== "de" && value !== "en") return;
+  if (value !== "ja" && value !== "de" && value !== "en") return;
   language = value;
   try { localStorage.setItem(languageKey, value); } catch (_) { /* Switching still works without persistence. */ }
   applyLanguage();
@@ -119,6 +161,11 @@ function renderRoutes(data) {
       await api("/api/routes/"+route.id, "DELETE", {}); await refresh();
     }, true), state, node("div", `${route.backend} · ID ${route.id}`, "meta"));
     if (route.target) card.append(node("div", `${route.target.host}:${route.target.port} · ${route.target.protocol}`, "meta"));
+    if (route.backend === "airplay") card.append(action("airplay_test", async () => {
+      const result = await api("/api/diagnostics/airplay-test", "POST", {route_id: route.id});
+      if (result.success) message("airplay_test_ok");
+      else message("diagnostic_error", {description: t(result.code), code: result.code});
+    }, true));
     if (route.backend === "dlna") {
       const address = document.createElement("input");
       address.value = route.target.description_url || "";
@@ -145,9 +192,29 @@ async function refresh(poll = false) {
     if (state) updateState(state, route.process);
   }
 }
+function refreshCastIndicators() {
+  return api("/api/diagnostics/cast").then(data => {
+    const target = $("cast-indicators"), rows = [];
+    const bridge = node("div", "", "indicator");
+    bridge.dataset.state = data.bridge === "ready" ? "ok" : "error";
+    bridge.append(node("strong", t("cast_bridge")), node("span", `${t(data.bridge_code)} · ${data.bridge_code}`));
+    rows.push(bridge);
+    for (const route of data.routes) {
+      const item = node("div", "", "indicator");
+      item.dataset.state = route.code === "CAST_MESSAGE_RECEIVED" || route.code === "CAST_READY_WAITING" ? "ok" : route.code === "CAST_ROUTE_DISABLED" ? "idle" : "error";
+      item.append(node("strong", `${t("cast_route")}: ${route.name}`), node("span", `${t(route.code)} · ${route.code}`));
+      const details = `${t("last_command")}: ${route.last_command || t("last_command_none")} · ${t("command_count")}: ${route.command_count} · ${t("heartbeat")}: ${route.heartbeat_age_seconds === null ? "—" : `${route.heartbeat_age_seconds}s`}`;
+      item.append(node("span", details, "meta"));
+      rows.push(item);
+    }
+    if (!data.routes.some(route => route.backend === "airplay")) rows.push(text(node("p", "", "meta"), "airplay_test_missing"));
+    target.replaceChildren(...rows);
+  });
+}
 document.querySelectorAll("[data-language]").forEach(button => { button.onclick = () => setLanguage(button.dataset.language); });
 applyLanguage();
 refresh().catch(showError);
+refreshCastIndicators().catch(showError);
 $("refresh").onclick = () => refresh().catch(showError);
 $("add-local").onclick = async () => { try { await api("/api/routes", "POST", {name: $("local-name").value, backend: "mpv"}); await refresh(); message("added"); } catch (e) { showError(e); } };
 async function addNetwork(backend, name, target) {
@@ -175,4 +242,4 @@ async function scanTargets(buttonId, containerId, endpoint, protocol) {
 }
 $("scan").onclick = () => scanTargets("scan", "candidates", "/api/scan", "AirPlay");
 $("scan-dlna").onclick = () => scanTargets("scan-dlna", "dlna-candidates", "/api/scan/dlna", "DLNA");
-setInterval(() => refresh(true).catch(showError), 5000);
+setInterval(() => { refresh(true).catch(showError); refreshCastIndicators().catch(showError); }, 5000);

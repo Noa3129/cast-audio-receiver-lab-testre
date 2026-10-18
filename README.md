@@ -106,6 +106,10 @@ short maintainer map.
 See the [working plan](docs/WORKING-PLAN.md) for the distinction between
 implemented, automated-tested, deployed and user-confirmed work.
 
+## 接続診断（日本語）
+
+管理画面でCastコマンドの受信状況を確認し、AirPlayへ短い低音量テスト音を送れます。表示される状態とエラーコードの意味、テスト手順は[日本語の接続診断ガイド](docs/diagnostics-ja.md)を参照してください。
+
 ## Authentication and first start
 
 The repository and container image contain no embedded Cast credentials. On a

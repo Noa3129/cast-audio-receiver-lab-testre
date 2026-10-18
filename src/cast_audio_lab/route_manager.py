@@ -126,6 +126,45 @@ class RouteManager:
             "readiness_check": "player_websocket_pong",
         }
 
+    async def cast_diagnostics(self):
+        """Expose bounded Cast receiver readiness and recent command receipt."""
+        bridge_ready = await self._bridge_reachable()
+        now = time.monotonic()
+        routes = []
+        for route in self.routes:
+            process = self.states.get(route.id, {})
+            pong = process.get("last_pong")
+            age = max(0.0, now - pong) if isinstance(pong, (int, float)) else None
+            responsive = (route.enabled and process.get("state") == "running"
+                          and age is not None and age <= _HEALTH_MAX_AGE)
+            if not route.enabled:
+                code = "CAST_ROUTE_DISABLED"
+            elif process.get("state") != "running":
+                code = "CAST_ADAPTER_NOT_RUNNING"
+            elif not responsive:
+                code = "CAST_RECEIVER_DISCONNECTED"
+            elif not process.get("cast_messages"):
+                code = "CAST_READY_WAITING"
+            else:
+                code = "CAST_MESSAGE_RECEIVED"
+            routes.append({
+                "id": route.id,
+                "name": route.name,
+                "backend": route.backend,
+                "enabled": route.enabled,
+                "code": code,
+                "responsive": bool(responsive),
+                "last_command": process.get("last_cast_command"),
+                "command_count": int(process.get("cast_messages", 0)),
+                "heartbeat_age_seconds": round(age, 1) if age is not None else None,
+            })
+        return {
+            "schema": 1,
+            "bridge": "ready" if bridge_ready else "unreachable",
+            "bridge_code": "CAST_BRIDGE_READY" if bridge_ready else "CAST_BRIDGE_UNREACHABLE",
+            "routes": routes,
+        }
+
     def status(self):
         uptime = 0.0 if self.started_at is None else max(0.0, time.monotonic() - self.started_at)
         routes = []
@@ -184,6 +223,12 @@ class RouteManager:
                     self.states[route_id]["last_pong"] = time.monotonic()
                 elif health == "disconnected":
                     self.states[route_id].pop("last_pong", None)
+                elif health.startswith("cast_received "):
+                    command = health.removeprefix("cast_received ")
+                    if command in {"load", "play", "pause", "stop", "seek", "volume"}:
+                        self.states[route_id]["cast_messages"] = self.states[route_id].get("cast_messages", 0) + 1
+                        self.states[route_id]["last_cast_command"] = command
+                        self.states[route_id]["last_cast_at"] = time.monotonic()
                 # Heartbeats are internal telemetry, not persistent log noise.
                 continue
             record = logging.LogRecord("adapter", logging.INFO, "", 0,

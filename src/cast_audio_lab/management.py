@@ -22,6 +22,8 @@ from .dlna_discovery import discover_dlna
 from .route_manager import RouteManager
 from .routes import Route, RouteStore, validate_routes
 from .output_registry import is_singleton
+from .airplay import AirPlayTarget
+from .airplay_probe import AirPlayProbeError, play_test_tone
 
 ASSETS = Path(__file__).with_name("web")
 
@@ -47,6 +49,7 @@ async def serve(app, host: str, ports: list[int]) -> None:
 def create_app(manager, *, discover=discover_airplay, discover_renderers=discover_dlna, ha_ingress=False):
     candidates = {}
     scan_lock = asyncio.Lock()
+    airplay_test_lock = asyncio.Lock()
     artwork_temp = tempfile.TemporaryDirectory(prefix='cast-artwork-')
     artwork_cache = ArtworkCache(Path(artwork_temp.name))
 
@@ -143,6 +146,40 @@ def create_app(manager, *, discover=discover_airplay, discover_renderers=discove
 
     async def support(request):
         return web.json_response(manager.support_snapshot(version=__version__))
+
+    async def cast_diagnostics(request):
+        return web.json_response(await manager.cast_diagnostics())
+
+    async def airplay_test(request):
+        body = await request.json()
+        if not isinstance(body, dict) or set(body) != {"route_id"} or not isinstance(body["route_id"], str):
+            raise ValueError("invalid AirPlay test request")
+        if airplay_test_lock.locked():
+            return web.json_response({"success": False, "code": "AIRPLAY_TEST_BUSY"})
+        async with manager.lock:
+            if airplay_test_lock.locked():
+                return web.json_response({"success": False, "code": "AIRPLAY_TEST_BUSY"})
+            route = next((item for item in manager.routes if item.id == body["route_id"]), None)
+            if route is None:
+                return web.json_response({"success": False, "code": "AIRPLAY_ROUTE_NOT_FOUND"})
+            if route.backend != "airplay" or not route.target:
+                return web.json_response({"success": False, "code": "AIRPLAY_ROUTE_REQUIRED"})
+            if route.enabled:
+                return web.json_response({"success": False, "code": "AIRPLAY_ROUTE_ACTIVE"})
+            async with airplay_test_lock:
+                try:
+                    result = await play_test_tone(
+                        AirPlayTarget(**route.target),
+                        cliairplay=manager.cliairplay,
+                        ffmpeg="ffmpeg",
+                    )
+                    return web.json_response({"success": True, **result})
+                except AirPlayProbeError as exc:
+                    return web.json_response({"success": False, "code": exc.code})
+                except FileNotFoundError:
+                    return web.json_response({"success": False, "code": "AIRPLAY_SENDER_NOT_FOUND"})
+                except (OSError, RuntimeError, TimeoutError):
+                    return web.json_response({"success": False, "code": "AIRPLAY_TEST_FAILED"})
 
     async def patch_route(request):
         body = await request.json()
@@ -290,6 +327,8 @@ def create_app(manager, *, discover=discover_airplay, discover_renderers=discove
     app.router.add_get("/health", health)
     app.router.add_get("/status", status)
     app.router.add_get("/api/support", support)
+    app.router.add_get("/api/diagnostics/cast", cast_diagnostics)
+    app.router.add_post("/api/diagnostics/airplay-test", airplay_test)
     app.router.add_get("/api/routes", listing)
     app.router.add_post("/api/routes", add_route)
     app.router.add_patch("/api/routes/{id}", patch_route)
